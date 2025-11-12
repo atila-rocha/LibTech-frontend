@@ -1,0 +1,109 @@
+
+<div class="ConteinerP">
+
+<div class="form-container mt-5">
+
+
+  <main class=" d-flex flex-column align-items-center m-auto ">
+    
+    <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="d-flex flex-column  w-50" >
+      <h1 class="h3 mb-3 fw-normal"><strong>Cadastro de Livro</strong></h1>
+
+
+       <div class="form-floating mt-3">
+        <input
+          type="titulo"
+          class="form-control"
+          id="floatingTitulo"
+          placeholder="titulo"
+          [class.is-invalid]="cadastroForm.get('titulo')?.invalid && (cadastroForm.get('titulo')?.dirty || cadastroForm.get('titulo')?.touched)"
+          formControlName="titulo"
+        />
+        <label for="floatingTitulo">Titulo da Obra</label>
+        @if (cadastroForm.get('titulo')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } 
+      </div>
+
+       <div class="form-floating mt-3">
+        <input
+          type="autor"
+          class="form-control"
+          id="floatingAutor"
+          placeholder="autor"
+          [class.is-invalid]="cadastroForm.get('autor')?.invalid && (cadastroForm.get('autor')?.dirty || cadastroForm.get('autor')?.touched)"
+          formControlName="autor"
+        />
+        <label for="floatingAutor">Autor da Obra</label>
+        @if (cadastroForm.get('autor')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } 
+      </div>
+
+      <div class="form-floating mt-3">
+        <input
+          type="tema"
+          class="form-control"
+          id="floatingTema"
+          placeholder="tema"
+          [class.is-invalid]="cadastroForm.get('tema')?.invalid && (cadastroForm.get('tema')?.dirty || cadastroForm.get('tema')?.touched)"
+          formControlName="tema"
+        />
+        <label for="floatingAutor">Tema da Obra</label>
+        @if (cadastroForm.get('tema')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } 
+      </div>
+
+      <div class="form-floating mt-3">
+        <input
+          type="anoPublicacao"
+          class="form-control"
+          id="floatingAnoPubli"
+          placeholder="anoPublicacao"
+          [class.is-invalid]="cadastroForm.get('anoPublicacao')?.invalid && (cadastroForm.get('anoPublicacao')?.dirty || cadastroForm.get('anoPublicacao')?.touched)"
+          formControlName="anoPublicacao"
+        />
+        <label for="floatingAutor">Ano de Publicação da Obra</label>
+        @if (cadastroForm.get('anoPublicacao')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } 
+      </div>
+
+      
+      <div class="form-floating mt-3">
+        <input
+          type="isbn"
+          class="form-control"
+          id="floatingISBN"
+          placeholder="isbn"
+          [class.is-invalid]="cadastroForm.get('isbn')?.invalid && (cadastroForm.get('isbn')?.dirty || cadastroForm.get('isbn')?.touched)"
+          formControlName="isbn"
+        />
+        <label for="floatingISBN">ISBN da Obra</label>
+        @if (cadastroForm.get('isbn')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } 
+      </div>
+      
+      
+      
+    </form>
+
+    <button class="btn btn-primary w-25  m-3" type="submit"><strong>Cadastrar</strong></button>
+
+  </main>
+</div>
+    <img src="EmaDeita.png" alt="Ema Deitada">
+</div>
+

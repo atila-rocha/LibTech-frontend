@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Fallback: importar Bootstrap diretamente do node_modules para garantir inclusão */
+/* Removido: `~` é um alias do webpack e não é resolvido pelo bundler atual (esbuild).
+	 O Bootstrap já está incluído via `angular.json` (styles: "node_modules/bootstrap/...").
+	 Se precisar importar manualmente, use:
+		 @import "node_modules/bootstrap/dist/css/bootstrap.min.css";
+*/
+
+/* Background global: aplica imagem de fundo para toda a aplicação.
+	 Observação: a pasta `public` está incluída como assets no `angular.json`,
+	 então a imagem `public/imagemFundoLogin.jpg` estará disponível no root -> "/imagemFundoLogin.jpg".
+*/
+
+
+/* Se algum componente tiver fundo branco por cima, ajuste sua transparência
+	 ou a remoção de background local (por exemplo, .form-container { background: transparent; }) */

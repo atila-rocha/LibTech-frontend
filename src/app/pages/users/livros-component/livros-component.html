@@ -1,0 +1,62 @@
+<div class = "livrosLocados mt-5">
+
+    <h2>Livros disponíveis para locação</h2>
+
+    <table class="table table-striped w-100">
+  <thead>
+    <tr>
+      <th scope="col">Ord.</th>
+      <th scope="col">Titulo da Obra</th>
+      <th scope="col">Nome Autor</th>
+      <th scope="col">ISBN</th>
+      <th scope="col">Reserva de Livro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Algoritmos de Computadores</td>
+      <td>Victor Vale</td>
+      <td>1223123152</td>
+      
+        <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Lógica de Programação</td>
+      <td>Bruno Lopes</td>
+      <td>3434323312</td>
+       
+        <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Programação orientada a objetos.</td>
+      <td>Elon Musk da Silva</td>
+      <td>4545454433</td>
+     
+       <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
+    </tr>
+    
+  </tbody>
+</table>
+
+ <div class="modal fade" id="livroReservModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Reservar Livro</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Deseja dar seguimento na locação do livro?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-danger">Sim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

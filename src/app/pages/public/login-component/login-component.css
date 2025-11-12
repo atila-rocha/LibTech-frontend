@@ -1,0 +1,61 @@
+:host {
+	display: block;
+	min-height: 100vh;
+	box-sizing: border-box;
+	padding: 2rem 1rem;
+	background-image: url('/imagemFundoLogin3.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+/* caixa do formulário (visualmente separada do background) */
+.form-container {
+    
+	max-width: 1000px;
+	margin: 0; /* manter alinhamento à esquerda do host */
+	padding: 1.5rem;
+	border-radius: 8px;
+}
+
+/* Forçar alinhamento à esquerda dentro do componente (sobrescreve utilitários do Bootstrap) */
+.form-container main {
+    padding-top: 300px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start !important; /* sobrescreve align-items-center */
+	margin: 0 !important; /* remove m-auto */
+	width: 100%;
+}
+
+/* Logo e linha superior alinhadas à esquerda */
+.form-container .d-flex.justify-content-center.w-100,
+.form-container .d-flex.justify-content-center.w-100 > img {
+	justify-content: flex-start !important;
+}
+
+/* Form ocupa largura limitada e fica alinhado à esquerda */
+.form-container form {
+	width: 100% !important;
+	max-width: 600px;
+	margin: 0; /* sem centralização */
+}
+
+/* pequenas melhorias de responsividade */
+@media (min-width: 768px) {
+	:host { padding: 3rem; }
+	.form-container { margin-left: 0; }
+}
+
+.EsqueceuSenha{
+    padding-top: 20px;
+}
+
+.btnAcess{
+	display: flex;
+	gap: 1rem; 
+}
+
+
+

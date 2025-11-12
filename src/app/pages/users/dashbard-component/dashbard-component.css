@@ -1,0 +1,58 @@
+.navBar{
+    background-color: #0277BD;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-link{
+    
+    color: #FFFFFF;
+    border-radius: 10px;
+    margin: 5px;
+    font-size: 20px;
+}
+
+.imgLogoUnifor{
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin: 10px;
+}
+
+.btn-sair {
+    background-color: #0277BD; 
+    color: #fff;
+    border: 1px solid #0277BD;
+
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 10px;
+    font-size: 20px;
+}
+
+.btn-sair:hover {
+
+    border-color: #FFFFFF;
+
+}
+
+.uniforLink{
+    color: #FFFFFF;
+    position: fixed;
+    font-size: 15px;
+    padding-top: 30px;
+    right: 250px;
+    top: 0;
+}
+
+.uniforLinkI{
+    color: #FFFFFF;
+    position: fixed;
+    font-size: 15px;
+    padding-top: 30px;
+    right: 100px;
+    top: 0;
+}

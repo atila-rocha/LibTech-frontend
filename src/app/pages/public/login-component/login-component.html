@@ -1,0 +1,83 @@
+<div class="form-container">
+  <main class=" d-flex flex-column align-items-center m-auto mt-6">
+    <div class="d-flex justify-content-center w-100">
+         
+      </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column  w-50" >
+      <h1 class="h2 mb-3 fw-normal"><strong>Acesso ao Sistema da Biblioteca</strong></h1>
+      <div class="form-floating">
+        <input
+          type="email"
+          class="form-control"
+          [class.is-invalid]="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+          id="floatingInput"
+          placeholder="name@example.com"
+          formControlName="email"
+        />
+        <label for="floatingInput">Insira seu e-mail</label>
+        @if (loginForm.get('email')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } @else if (loginForm.get('email')?.errors?.['email']) {
+          <div class="invalid-feedback">
+            O endereço de e-mail é inválido.
+          </div>
+        }
+      </div>
+      <div class="form-floating mt-3">
+        <input
+          type="password"
+          class="form-control"
+          id="floatingPassword"
+          placeholder="Password"
+          [class.is-invalid]="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+          formControlName="password"
+        />
+        <label for="floatingPassword">Insira sua senha</label>
+        @if (loginForm.get('password')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } @else if (loginForm.get('password')?.errors?.['minlength']) {
+          <div class="invalid-feedback">
+            A senha deve ter 5 ou mais caracteres
+          </div>
+        }
+      </div>
+      <div class="form-check text-start my-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="remember-me"
+          id="checkDefault"
+        />
+        <label class="form-check-label" for="checkDefault"> Lembrar identificação do usuário </label>
+      </div>
+
+      <div class = "btnAcess">
+        <button class="btn btn-primary w-100 py-2" type="submit"><strong>Acesso Aluno</strong></button>
+        <button class="btn btn-primary w-100 py-2" type="submit"><strong>Acesso Administrativo</strong></button>
+      </div>
+      
+      <div class = "EsqueceuSenha">
+
+        
+        <p>
+            Esqueceu sua senha?       
+        </p>
+        
+        Acesse a página do <a href="https://unifor.br/">Unifor Online</a> e clique em "Esqueceu sua senha?".
+        Por favor, espere 1 hora antes de tentar acessar novamente.
+      </div>
+
+
+      <div>
+        <p class="form-floating mt-3"><strong>Caso não possua cadastro clique no botão abaixo.</strong></p>
+        <button class="btn btn-primary w-50 py-2" type="button" (click)="goToCadastro()"><strong>Cadastrar Usuário</strong></button>
+      </div>
+      
+
+    </form>
+  </main>
+</div>
