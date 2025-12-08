@@ -10,40 +10,24 @@
     <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="d-flex flex-column  w-50" >
       <h1 class="h3 mb-3 fw-normal"><strong>Cadastre-se</strong></h1>
 
+      <!-- Mensagem de sucesso -->
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
 
-      <!-- Informar e-mail -->
-
-     
-
-      <!-- Informar cpf -->
-
-
-            <div class="form-floating mt-3">
-        <input
-          type="cpf"
-          class="form-control"
-          id="floatingCPF"
-          placeholder="cpf"
-          [class.is-invalid]="cadastroForm.get('cpf')?.invalid && (cadastroForm.get('cpf')?.dirty || cadastroForm.get('cpf')?.touched)"
-          formControlName="cpf"
-        />
-        <label for="floatingCPF">CPF</label>
-        @if (cadastroForm.get('cpf')?.errors?.['required']) {
-          <div class="invalid-feedback">
-            O campo não pode ser vazio.
-          </div>
-        } @else if (cadastroForm.get('cpf')?.errors?.['minlength']) {
-          <div class="invalid-feedback">
-            O número de CPF informado não é válido, verifique.
-          </div>
-        }
-      </div>
+      <!-- Mensagem de erro -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
 
       <!-- Informar nome completo -->
-
-            <div class="form-floating mt-3">
+      <div class="form-floating mt-3">
         <input
-          type="nome"
+          type="text"
           class="form-control"
           id="floatingNome"
           placeholder="Nome"
@@ -55,36 +39,84 @@
           <div class="invalid-feedback">
             O campo não pode ser vazio.
           </div>
-        } 
+        } @else if (cadastroForm.get('nome')?.errors?.['minlength']) {
+          <div class="invalid-feedback">
+            O nome deve ter pelo menos 3 caracteres.
+          </div>
+        }
       </div>
 
-
-      <!-- Informar telefone -->
-
+      <!-- Informar CPF -->
       <div class="form-floating mt-3">
         <input
-          type="telefone"
+          type="text"
+          class="form-control"
+          id="floatingCPF"
+          placeholder="CPF"
+          maxlength="14"
+          [class.is-invalid]="cadastroForm.get('cpf')?.invalid && (cadastroForm.get('cpf')?.dirty || cadastroForm.get('cpf')?.touched)"
+          formControlName="cpf"
+          (input)="onCpfInput($event)"
+        />
+        <label for="floatingCPF">CPF</label>
+        @if (cadastroForm.get('cpf')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } @else if (cadastroForm.get('cpf')?.errors?.['cpfInvalid']) {
+          <div class="invalid-feedback">
+            O CPF informado não é válido.
+          </div>
+        }
+      </div>
+
+      <!-- Informar e-mail -->
+      <div class="form-floating mt-3">
+        <input
+          type="email"
+          class="form-control"
+          id="floatingEmail"
+          placeholder="name@example.com"
+          [class.is-invalid]="cadastroForm.get('email')?.invalid && (cadastroForm.get('email')?.dirty || cadastroForm.get('email')?.touched)"
+          formControlName="email"
+        />
+        <label for="floatingEmail">E-mail</label>
+        @if (cadastroForm.get('email')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } @else if (cadastroForm.get('email')?.errors?.['email']) {
+          <div class="invalid-feedback">
+            O endereço de e-mail é inválido.
+          </div>
+        }
+      </div>
+
+      <!-- Informar telefone -->
+      <div class="form-floating mt-3">
+        <input
+          type="text"
           class="form-control"
           id="floatingTelefone"
           placeholder="Telefone"
+          maxlength="15"
           [class.is-invalid]="cadastroForm.get('telefone')?.invalid && (cadastroForm.get('telefone')?.dirty || cadastroForm.get('telefone')?.touched)"
           formControlName="telefone"
+          (input)="onPhoneInput($event)"
         />
         <label for="floatingTelefone">Telefone</label>
         @if (cadastroForm.get('telefone')?.errors?.['required']) {
           <div class="invalid-feedback">
             O campo não pode ser vazio.
           </div>
-        } @else if (cadastroForm.get('telefone')?.errors?.['minlength']) {
+        } @else if (cadastroForm.get('telefone')?.errors?.['phoneInvalid']) {
           <div class="invalid-feedback">
-            O número de telefone informado não é válido, verifique.
+            O número de telefone informado não é válido.
           </div>
         }
       </div>
 
-
       <!-- Cadastrar nova senha -->
-
       <div class="form-floating mt-3">
         <input
           type="password"
@@ -101,21 +133,52 @@
           </div>
         } @else if (cadastroForm.get('password')?.errors?.['minlength']) {
           <div class="invalid-feedback">
-            A senha deve ter 5 ou mais caracteres
+            A senha deve ter 5 ou mais caracteres.
           </div>
         }
       </div>
 
-      <div class="form-check text-start my-3">
+      <!-- Confirmar senha -->
+      <div class="form-floating mt-3">
         <input
-          class="form-check-input"
-          type="checkbox"
-          value="remember-me"
-          id="checkDefault"
+          type="password"
+          class="form-control"
+          id="floatingPasswordConfirm"
+          placeholder="Confirme a senha"
+          [class.is-invalid]="cadastroForm.get('passwordConfirm')?.invalid && (cadastroForm.get('passwordConfirm')?.dirty || cadastroForm.get('passwordConfirm')?.touched)"
+          formControlName="passwordConfirm"
         />
-        <label class="form-check-label" for="checkDefault"> Remember me </label>
+        <label for="floatingPasswordConfirm">Confirme sua senha</label>
+        @if (cadastroForm.get('passwordConfirm')?.errors?.['required']) {
+          <div class="invalid-feedback">
+            O campo não pode ser vazio.
+          </div>
+        } @else if (cadastroForm.get('passwordConfirm')?.errors?.['minlength']) {
+          <div class="invalid-feedback">
+            A senha deve ter 5 ou mais caracteres.
+          </div>
+        } @else if (cadastroForm.get('passwordConfirm')?.errors?.['passwordMismatch']) {
+          <div class="invalid-feedback">
+            As senhas não coincidem.
+          </div>
+        }
       </div>
-      <button class="btn btn-primary w-100 py-2" type="submit"><strong>Cadastrar</strong></button>
+
+      <button 
+        class="btn btn-primary w-100 py-2 mt-4" 
+        type="submit"
+        [disabled]="isLoading">
+        <strong>{{ isLoading ? 'Cadastrando...' : 'Cadastrar' }}</strong>
+      </button>
+
+      <button 
+        class="btn btn-secondary w-100 py-2 mt-2" 
+        type="button"
+        (click)="goToLogin()"
+        [disabled]="isLoading">
+        <strong>Voltar para Login</strong>
+      </button>
+
       <p class="mt-5 mb-3 text-body-secondary">© 2017–2025</p>
     </form>
   </main>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login-component',
@@ -10,8 +11,13 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login-component.css'],
 })
 export class LoginComponent {
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   loginForm = new FormGroup({
     email: new FormControl('', [
@@ -24,9 +30,69 @@ export class LoginComponent {
     ])
   })
 
-  onSubmit() {
+  /**
+   * Login como Aluno
+   */
+  onSubmitAluno() {
     if(this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched()
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.login('ALUNO');
+  }
+
+  /**
+   * Login como Administrador
+   */
+  onSubmitAdmin() {
+    if(this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.login('ADMIN');
+  }
+
+  /**
+   * Método genérico de login
+   */
+  private login(tipoEsperado: 'ALUNO' | 'ADMIN') {
+    this.errorMessage = '';
+    this.isLoading = true;
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email!, password!).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        
+        // Verifica se o tipo de usuário corresponde ao botão clicado
+        if (response.tipo !== tipoEsperado) {
+          this.errorMessage = `Você não tem permissão de ${tipoEsperado.toLowerCase()}.`;
+          this.authService.logout();
+          return;
+        }
+
+        // Redireciona conforme o tipo de usuário
+        if (response.tipo === 'ADMIN') {
+          this.router.navigate(['/admin/dashboardadm']);
+        } else {
+          this.router.navigate(['/users/dashboard']);
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.message || 'Erro ao fazer login. Tente novamente.';
+        console.error('Erro no login:', error);
+      }
+    });
+  }
+
+  onSubmit() {
+    // Método mantido para compatibilidade (pode remover se não usar)
+    if(this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
   }

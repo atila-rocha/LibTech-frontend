@@ -3,8 +3,16 @@
     <div class="d-flex justify-content-center w-100">
          
       </div>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="d-flex flex-column  w-50" >
+    <form [formGroup]="loginForm" class="d-flex flex-column  w-50" >
       <h1 class="h2 mb-3 fw-normal"><strong>Acesso ao Sistema da Biblioteca</strong></h1>
+      
+      <!-- Mensagem de erro -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+      
       <div class="form-floating">
         <input
           type="email"
@@ -56,8 +64,20 @@
       </div>
 
       <div class = "btnAcess">
-        <button class="btn btn-primary w-100 py-2" type="submit"><strong>Acesso Aluno</strong></button>
-        <button class="btn btn-primary w-100 py-2" type="submit"><strong>Acesso Administrativo</strong></button>
+        <button 
+          class="btn btn-primary w-100 py-2" 
+          type="button" 
+          (click)="onSubmitAluno()"
+          [disabled]="isLoading">
+          <strong>{{ isLoading ? 'Carregando...' : 'Acesso Aluno' }}</strong>
+        </button>
+        <button 
+          class="btn btn-primary w-100 py-2" 
+          type="button" 
+          (click)="onSubmitAdmin()"
+          [disabled]="isLoading">
+          <strong>{{ isLoading ? 'Carregando...' : 'Acesso Administrativo' }}</strong>
+        </button>
       </div>
       
       <div class = "EsqueceuSenha">

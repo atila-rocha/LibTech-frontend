@@ -7,6 +7,7 @@ import { LivrosComponent } from './pages/users/livros-component/livros-component
 import { DashboaradmComponent } from './pages/admin/dashboaradm-component/dashboaradm-component';
 import { ControlComponent } from './pages/admin/control-component/control-component';
 import { RecordComponent } from './pages/admin/record-component/record-component';
+import { authGuard, adminGuard, alunoGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
     {
         path: "users/dashboard",
         component: DashbardComponent,
+        canActivate: [authGuard, alunoGuard],
         children:[
             {
                 path: '',
@@ -43,6 +45,7 @@ export const routes: Routes = [
     },{
         path: "admin/dashboardadm",
         component: DashboaradmComponent,
+        canActivate: [authGuard, adminGuard],
         children:[
             {
                 path: '',
