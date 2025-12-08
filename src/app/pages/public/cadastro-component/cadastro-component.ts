@@ -45,6 +45,9 @@ export class CadastroComponent {
     passwordConfirm: new FormControl('', [
       Validators.required,
       Validators.minLength(5)
+    ]),
+    isAdmin: new FormControl(false, [
+      Validators.required
     ])
   }, { validators: passwordMatchValidator() });
 
@@ -92,15 +95,17 @@ export class CadastroComponent {
     const cpfLimpo = formValue.cpf?.replace(/[^\d]/g, '') || '';
     const telefoneLimpo = formValue.telefone?.replace(/[^\d]/g, '') || '';
 
+    const isAdminValue=formValue.isAdmin===true;
+    
     const userData = {
       name: formValue.nome!,
       cpf: cpfLimpo,
       email: formValue.email!,
       phone: telefoneLimpo,
-      passwordHashed: formValue.password!, // O backend deve fazer o hash
-      isAdmin: false
+      password: formValue.password!, // O backend deve fazer o hash
+      isAdmin: isAdminValue //|| false
     };
-
+    console.log(userData);
     this.userService.register(userData).subscribe({
       next: (response) => {
         this.isLoading = false;

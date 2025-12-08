@@ -8,7 +8,7 @@ export interface UserRegisterRequest {
   cpf: string;
   email: string;
   phone: string;
-  passwordHashed: string;
+  password: string;
   isAdmin?: boolean;
 }
 
@@ -25,7 +25,7 @@ export interface UserRegisterResponse {
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = '/api'; // Usando proxy
+  private apiUrl = 'http://localhost:8080/users'; // Usando proxy
 
   constructor(private http: HttpClient) {}
 
@@ -35,7 +35,7 @@ export class UserService {
    * @returns Observable com resposta do cadastro
    */
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
-    return this.http.post<UserRegisterResponse>(`${this.apiUrl}/users/register`, userData)
+    return this.http.post<UserRegisterResponse>(`${this.apiUrl}`, userData)
       .pipe(
         catchError(this.handleError)
       );

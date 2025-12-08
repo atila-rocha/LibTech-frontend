@@ -10,23 +10,25 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string;
-  tipo: 'ALUNO' | 'ADMIN';
+  acess_token: string;
+  tipo: boolean;
   email: string;
   nome?: string;
+  id?: number;
 }
 
 export interface Usuario {
   email: string;
   nome?: string;
-  tipo: 'ALUNO' | 'ADMIN';
+  tipo: boolean;
+  id?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api'; // Usando proxy
+  private apiUrl = 'http://localhost:8080/auth';
   private currentUserSubject: BehaviorSubject<Usuario | null>;
   public currentUser: Observable<Usuario | null>;
 
@@ -34,7 +36,6 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    // Recupera usuário do localStorage ao iniciar
     const storedUser = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<Usuario | null>(
       storedUser ? JSON.parse(storedUser) : null
@@ -48,23 +49,32 @@ export class AuthService {
 
   /**
    * Faz login no sistema
-   * @param email Email do usuário
-   * @param password Senha do usuário
-   * @returns Observable com resposta do login
    */
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
-          // Armazena token e dados do usuário
-          if (response && response.token) {
-            localStorage.setItem('token', response.token);
+          console.log('📦 Resposta do servidor:', response);
+          
+          if (response && response.acess_token) {
+            // Salve o token
+            localStorage.setItem('token', response.acess_token);
+            console.log('✅ Token salvo');
+
+            // Salve os dados do usuário
             const usuario: Usuario = {
               email: response.email,
               nome: response.nome,
-              tipo: response.tipo
+              tipo: response.tipo,
+              id: response.id
             };
             localStorage.setItem('currentUser', JSON.stringify(usuario));
+            console.log('✅ currentUser salvo:', usuario);
+
+            // IMPORTANTE: Salve também o tipo separado para os guards
+            localStorage.setItem('userType', response.tipo.toString());
+            console.log('✅ userType salvo:', response.tipo);
+
             this.currentUserSubject.next(usuario);
           }
         }),
@@ -76,12 +86,11 @@ export class AuthService {
    * Faz logout do sistema
    */
   logout(): void {
-    // Remove dados do localStorage
+    console.log('🚪 Fazendo logout...');
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('userType');
     this.currentUserSubject.next(null);
-    
-    // Redireciona para login
     this.router.navigate(['/']);
   }
 
@@ -90,7 +99,9 @@ export class AuthService {
    */
   isAuthenticated(): boolean {
     const token = this.getToken();
-    return !!token && !this.isTokenExpired(token);
+    const isAuth = !!token && !this.isTokenExpired(token);
+    console.log('🔍 isAuthenticated:', isAuth);
+    return isAuth;
   }
 
   /**
@@ -109,7 +120,7 @@ export class AuthService {
       const expiry = payload.exp;
       return (Math.floor((new Date).getTime() / 1000)) >= expiry;
     } catch (e) {
-      return true; // Se não conseguir decodificar, considera expirado
+      return true;
     }
   }
 
@@ -118,7 +129,9 @@ export class AuthService {
    */
   isAdmin(): boolean {
     const user = this.currentUserValue;
-    return user?.tipo === 'ADMIN';
+    const isAdm = user?.tipo === true;
+    console.log('🔍 isAdmin:', isAdm, '(tipo:', user?.tipo, ')');
+    return isAdm;
   }
 
   /**
@@ -126,7 +139,9 @@ export class AuthService {
    */
   isAluno(): boolean {
     const user = this.currentUserValue;
-    return user?.tipo === 'ALUNO';
+    const isAl = user?.tipo === false;
+    console.log('🔍 isAluno:', isAl, '(tipo:', user?.tipo, ')');
+    return isAl;
   }
 
   /**
@@ -136,10 +151,8 @@ export class AuthService {
     let errorMessage = 'Ocorreu um erro desconhecido!';
     
     if (error.error instanceof ErrorEvent) {
-      // Erro do lado do cliente
       errorMessage = `Erro: ${error.error.message}`;
     } else {
-      // Erro do lado do servidor
       switch (error.status) {
         case 401:
           errorMessage = 'Email ou senha inválidos!';
@@ -158,6 +171,7 @@ export class AuthService {
       }
     }
     
+    console.error('❌ Erro:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

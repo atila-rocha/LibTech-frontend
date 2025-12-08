@@ -34,85 +34,79 @@ export class LoginComponent {
    * Login como Aluno
    */
   onSubmitAluno() {
-    if(this.loginForm.invalid) {
+    if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.login('ALUNO');
+    this.login(false);
   }
 
   /**
    * Login como Administrador
    */
   onSubmitAdmin() {
-    if(this.loginForm.invalid) {
+    if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.login('ADMIN');
+    this.login(true);
   }
 
   /**
    * Método genérico de login
    */
-  private login(tipoEsperado: 'ALUNO' | 'ADMIN') {
+  private login(tipoEsperado: boolean) {
     this.errorMessage = '';
     this.isLoading = true;
 
     const { email, password } = this.loginForm.value;
 
+    console.log('🔐 Iniciando login:', { email, tipoEsperado });
+
     this.authService.login(email!, password!).subscribe({
       next: (response) => {
+        console.log('✅ Login bem-sucedido:', response);
         this.isLoading = false;
-        
-        // Verifica se o tipo de usuário corresponde ao botão clicado
-        if (response.tipo !== tipoEsperado) {
-          this.errorMessage = `Você não tem permissão de ${tipoEsperado.toLowerCase()}.`;
+
+        // Validar tipo de usuário
+        if (response.tipo === true && tipoEsperado === false) {
+          this.errorMessage = 'Este usuário é ADMIN. Use o login de administrador.';
           this.authService.logout();
           return;
         }
 
-        // Redireciona conforme o tipo de usuário
-        if (response.tipo === 'ADMIN') {
-          this.router.navigate(['/admin/dashboardadm']);
+        if (response.tipo === false && tipoEsperado === true) {
+          this.errorMessage = 'Este usuário não é ADMIN. Use o login de aluno.';
+          this.authService.logout();
+          return;
+        }
+
+        console.log('🎯 Tipo de usuário validado. Redirecionando...');
+
+        // Redirecionar conforme o tipo
+        if (response.tipo === true) {
+          console.log('➡️ Navegando para /admin/dashboardadm');
+          this.router.navigate(['/admin/dashboardadm']).then(success => {
+            console.log('✅ Navegação bem-sucedida:', success);
+          });
         } else {
-          this.router.navigate(['/users/dashboard']);
+          console.log('➡️ Navegando para /users/dashboard');
+          this.router.navigate(['/users/dashboard']).then(success => {
+            console.log('✅ Navegação bem-sucedida:', success);
+          });
         }
       },
       error: (error) => {
         this.isLoading = false;
+        console.error('❌ Erro no login:', error);
         this.errorMessage = error.message || 'Erro ao fazer login. Tente novamente.';
-        console.error('Erro no login:', error);
       }
     });
   }
 
-  onSubmit() {
-    // Método mantido para compatibilidade (pode remover se não usar)
-    if(this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-  }
-
-  /** Soft reload: re-navega para a mesma rota sem forçar reload total da página. */
-  softReload() {
-    const current = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigateByUrl(current);
-    });
-  }
-
-  /** Full reload: recarrega toda a página (equivalente a F5). */
-  fullReload() {
-    window.location.reload();
-  }
-
-  /** Navega para a página de cadastro de usuário */
   goToCadastro() {
     this.router.navigate(['/cadastro']);
   }
-
 }
