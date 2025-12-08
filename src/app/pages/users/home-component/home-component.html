@@ -2,143 +2,139 @@
   <div class="row">
     <div class="col-6">
       <h3>Dados do usuário</h3>
-    
-  <table class="table table-hover mt-3">
-    
-    <tbody>
-      <tr>
-        
-        <td><strong>Nome</strong></td>
-        <td>Victor Menezes do Vale</td>
-       
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">Editar</button></td>
-      </tr>
-      <tr>
-        
-        <td><strong>E-mail</strong></td>
-        <td>victorvale14&#64;gmail.com</td>
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">Editar</button></td>
-        
-      </tr>
 
-      <tr>
-        
-        <td><strong>CPF</strong></td>
-        <td>083.335.764-07</td>
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">Editar</button></td>
-        
-      </tr>
+      <!-- Indicador de carregamento -->
+      <div *ngIf="carregandoUsuario" class="alert alert-info">
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Carregando dados do usuário...
+      </div>
 
-      <tr>
-        <td><strong>Telefone</strong></td>
-        <td>(85) 999-9999</td>
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">Editar</button></td>
-        
-      </tr>
-    </tbody>
-  </table>
-  <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Dados</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Deseja dar seguimento na edição dos dados?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-          <button type="button" class="btn btn-danger">Sim</button>
+      <!-- Mensagem de erro -->
+      <div *ngIf="erroUsuario && !carregandoUsuario" class="alert alert-danger">
+        {{ erroUsuario }}
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarDadosUsuario()">
+          Tentar novamente
+        </button>
+      </div>
+
+      <!-- Tabela com dados do usuário -->
+      <table class="table table-hover mt-3" *ngIf="usuarioLogado && !carregandoUsuario">
+        <tbody>
+          <tr>
+            <td><strong>Nome</strong></td>
+            <td>{{ usuarioLogado.name }}</td>
+            <td>
+              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
+                Editar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>E-mail</strong></td>
+            <td>{{ usuarioLogado.email }}</td>
+            <td>
+              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
+                Editar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>CPF</strong></td>
+            <td>{{ usuarioLogado.cpf }}</td>
+            <td>
+              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
+                Editar
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Telefone</strong></td>
+            <td>{{ usuarioLogado.phone }}</td>
+            <td>
+              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
+                Editar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Modal de edição -->
+      <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Dados</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Deseja dar seguimento na edição dos dados?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+              <button type="button" class="btn btn-danger">Sim</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-
-<div class = "livrosLocados mt-5">
-
+  <!-- Seção de Livros Locados -->
+  <div class="livrosLocados mt-5">
     <h2>Livros Locados</h2>
 
     <table class="table table-striped w-100">
-  <thead>
-    <tr>
-      <th scope="col">Ord.</th>
-      <th scope="col">Titulo da Obra</th>
-      <th scope="col">Nome Autor</th>
-      <th scope="col">ISBN</th>
-      <th scope="col">Data da Locação</th>
-      <th scope="col">Estado de Conservação</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Algoritmos de Computadores</td>
-      <td>Victor Vale</td>
-      <td>1223123152</td>
-      <td>12/11/2025</td>
-      <td>
-        
-        <div class="btn-group">
-          <button type="button" [ngClass]="stateClass(bookStates[0])">{{ stateLabel(bookStates[0]) }}</button>
-          <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="visually-hidden">Toggle Dropdown</span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><button class="dropdown-item" type="button" (click)="setState(0,'bom')">Bom</button></li>
-            <li><button class="dropdown-item" type="button" (click)="setState(0,'regular')">Regular</button></li>
-            <li><button class="dropdown-item" type="button" (click)="setState(0,'ruim')">Ruim</button></li>
-            
-          </ul>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Lógica de Programação</td>
-      <td>Bruno Lopes</td>
-      <td>3434323312</td>
-       <td>04/10/2025</td>
-        <td>
-          <div class="btn-group">
-            <button type="button" [ngClass]="stateClass(bookStates[1])">{{ stateLabel(bookStates[1]) }}</button>
-            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><button class="dropdown-item" type="button" (click)="setState(1,'bom')">Bom</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(1,'regular')">Regular</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(1,'ruim')">Ruim</button></li>
-
-              
-            </ul>
-          </div>
-        </td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Programação orientada a objetos.</td>
-      <td>Elon Musk da Silva</td>
-      <td>4545454433</td>
-      <td>09/09/2025</td>
-        <td>
-          <div class="btn-group">
-            <button type="button" [ngClass]="stateClass(bookStates[2])">{{ stateLabel(bookStates[2]) }}</button>
-            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><button class="dropdown-item" type="button" (click)="setState(2,'bom')">Bom</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(2,'regular')">Regular</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(2,'ruim')">Ruim</button></li>
-              
-            </ul>
-          </div>
-        </td>
-    </tr>
-    
-  </tbody>
-</table>
-</div>
+      <thead>
+        <tr>
+          <th scope="col">Ord.</th>
+          <th scope="col">Titulo da Obra</th>
+          <th scope="col">Nome Autor</th>
+          <th scope="col">ISBN</th>
+          <th scope="col">Data da Locação</th>
+          <th scope="col">Estado de Conservação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Algoritmos de Computadores</td>
+          <td>Victor Vale</td>
+          <td>1223123152</td>
+          <td>12/11/2025</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" [ngClass]="stateClass(bookStates[0])">
+                {{ stateLabel(bookStates[0]) }}
+              </button>
+              <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button" (click)="setState(0, 'bom')">Bom</button></li>
+                <li><button class="dropdown-item" type="button" (click)="setState(0, 'regular')">Regular</button></li>
+                <li><button class="dropdown-item" type="button" (click)="setState(0, 'ruim')">Ruim</button></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Lógica de Programação</td>
+          <td>Bruno Lopes</td>
+          <td>3434323312</td>
+          <td>04/10/2025</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" [ngClass]="stateClass(bookStates[1])">
+                {{ stateLabel(bookStates[1]) }}
+              </button>
+              <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button" (click)="setState(1, 'bom')">Bom</button></li>
+                <li><button class="dropdown-item" type="button" (click)="setState(1, 'regular')">Regular</button></li>
+                <li><button class="dropdown-item" type="button" (click)="setState(1, 'ruim')">Ruim</button></li>
+              </ul>
+            </div>

@@ -44,8 +44,11 @@ export class AuthService {
   }
 
   public get currentUserValue(): Usuario | null {
-    return this.currentUserSubject.value;
-  }
+      const user = this.currentUserSubject.value;
+      console.log('🔍 currentUserValue:', user);
+      console.log('📦 localStorage currentUser:', localStorage.getItem('currentUser'));
+      return user;
+      }
 
   /**
    * Faz login no sistema
@@ -57,24 +60,24 @@ export class AuthService {
           console.log('📦 Resposta do servidor:', response);
           
           if (response && response.acess_token) {
-            // Salve o token
             localStorage.setItem('token', response.acess_token);
             console.log('✅ Token salvo');
-
-            // Salve os dados do usuário
+          
+            // IMPORTANTE: Verifique se o response tem ID
             const usuario: Usuario = {
               email: response.email,
               nome: response.nome,
               tipo: response.tipo,
-              id: response.id
+              id: response.id  // ← Verifique se isso está vindo do backend
             };
+            
+            console.log('👤 Usuário a ser salvo:', usuario);
             localStorage.setItem('currentUser', JSON.stringify(usuario));
             console.log('✅ currentUser salvo:', usuario);
-
-            // IMPORTANTE: Salve também o tipo separado para os guards
+          
             localStorage.setItem('userType', response.tipo.toString());
             console.log('✅ userType salvo:', response.tipo);
-
+          
             this.currentUserSubject.next(usuario);
           }
         }),

@@ -21,18 +21,25 @@ export interface UserRegisterResponse {
   isAdmin: boolean;
 }
 
+export interface UserResponseDTO {
+  id: number;
+  name: string;
+  cpf: string;
+  email: string;
+  phone: string;
+  isAdmin: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/users'; // Usando proxy
+  private apiUrl = 'http://localhost:8080/users';
 
   constructor(private http: HttpClient) {}
 
   /**
    * Registra um novo usuário no sistema
-   * @param userData Dados do usuário para cadastro
-   * @returns Observable com resposta do cadastro
    */
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
     return this.http.post<UserRegisterResponse>(`${this.apiUrl}`, userData)
@@ -42,12 +49,50 @@ export class UserService {
   }
 
   /**
+   * Busca usuário por ID
+   */
+  getUserById(id: number): Observable<UserResponseDTO> {
+    return this.http.get<UserResponseDTO>(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Busca usuário por email
+   */
+  getUserByEmail(email: string): Observable<UserResponseDTO> {
+    return this.http.get<UserResponseDTO>(`${this.apiUrl}/email/${email}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Busca usuário por CPF
+   */
+  getUserByCpf(cpf: string): Observable<UserResponseDTO> {
+    return this.http.get<UserResponseDTO>(`${this.apiUrl}/cpf/${cpf}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Atualiza dados do usuário
+   */
+  updateUser(id: number, userData: UserRegisterRequest): Observable<UserResponseDTO> {
+    return this.http.put<UserResponseDTO>(`${this.apiUrl}/${id}`, userData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
    * Verifica se um email já está cadastrado
-   * @param email Email a ser verificado
-   * @returns Observable com booleano indicando se existe
    */
   checkEmailExists(email: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/users/check-email?email=${email}`)
+    return this.http.get<boolean>(`${this.apiUrl}/exists/email/${email}`)
       .pipe(
         catchError(() => throwError(() => new Error('Erro ao verificar email')))
       );
@@ -55,11 +100,9 @@ export class UserService {
 
   /**
    * Verifica se um CPF já está cadastrado
-   * @param cpf CPF a ser verificado
-   * @returns Observable com booleano indicando se existe
    */
   checkCpfExists(cpf: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/users/check-cpf?cpf=${cpf}`)
+    return this.http.get<boolean>(`${this.apiUrl}/exists/cpf/${cpf}`)
       .pipe(
         catchError(() => throwError(() => new Error('Erro ao verificar CPF')))
       );
@@ -72,13 +115,14 @@ export class UserService {
     let errorMessage = 'Ocorreu um erro desconhecido!';
     
     if (error.error instanceof ErrorEvent) {
-      // Erro do lado do cliente
       errorMessage = `Erro: ${error.error.message}`;
     } else {
-      // Erro do lado do servidor
       switch (error.status) {
         case 400:
           errorMessage = 'Dados inválidos. Verifique os campos e tente novamente.';
+          break;
+        case 404:
+          errorMessage = 'Usuário não encontrado.';
           break;
         case 409:
           errorMessage = 'Email ou CPF já cadastrado no sistema.';
