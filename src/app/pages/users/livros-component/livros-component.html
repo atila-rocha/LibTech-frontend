@@ -2,7 +2,6 @@
 
   <h2 class="mb-4">Livros disponíveis para locação</h2>
 
-  <!-- 1. Feedback de Carregamento -->
   <div *ngIf="carregando" class="text-center my-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Carregando...</span>
@@ -10,12 +9,10 @@
     <p class="mt-2 text-muted">Buscando livros disponíveis...</p>
   </div>
 
-  <!-- 2. Feedback de Lista Vazia -->
   <div *ngIf="!carregando && livros.length === 0" class="alert alert-warning mt-3" role="alert">
     Nenhum livro disponível para locação no momento.
   </div>
 
-  <!-- 3. Tabela de Livros -->
   <table class="table table-striped table-hover w-100" *ngIf="!carregando && livros.length > 0">
     <thead class="table-light">
       <tr>
@@ -33,7 +30,6 @@
         <td>{{ livro.author }}</td>
         <td>{{ livro.isbn || 'N/A' }}</td>
         <td class="text-center">
-          <!-- Botão que abre o modal e passa o livro atual -->
           <button 
             type="button" 
             class="btn btn-secondary w-75" 
@@ -45,7 +41,6 @@
     </tbody>
   </table>
 
-  <!-- 4. Modal de Confirmação -->
   <div class="modal fade" id="livroReservModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -57,7 +52,6 @@
         <div class="modal-body">
           <p>Você deseja confirmar a locação do seguinte livro?</p>
           
-          <!-- Exibe detalhes do livro selecionado -->
           <div *ngIf="livroSelecionado" class="alert alert-light border text-center">
             <h5 class="mb-1 text-primary fw-bold">{{ livroSelecionado.title }}</h5>
             <small class="text-muted">{{ livroSelecionado.author }}</small>
@@ -67,7 +61,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           
-          <!-- Botão Sim: Chama a função e fecha o modal -->
           <button 
             type="button" 
             class="btn btn-danger" 

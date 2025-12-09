@@ -45,9 +45,7 @@ export class BookService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Cria um novo livro no sistema
-   */
+  
   createBook(bookData: BookRequestDTO): Observable<BookResponseDTO> {
     return this.http.post<BookResponseDTO>(`${this.apiUrl}`, bookData)
       .pipe(
@@ -55,9 +53,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livro por ID
-   */
+  
   getBookById(id: number): Observable<BookResponseDTO> {
     return this.http.get<BookResponseDTO>(`${this.apiUrl}/${id}`)
       .pipe(
@@ -65,9 +61,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livro por título
-   */
+  
   getBookByTitle(title: string): Observable<BookResponseDTO> {
     return this.http.get<BookResponseDTO>(`${this.apiUrl}/title/${title}`)
       .pipe(
@@ -75,9 +69,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livro por ISBN
-   */
+ 
   getBookByIsbn(isbn: string): Observable<BookResponseDTO> {
     return this.http.get<BookResponseDTO>(`${this.apiUrl}/isbn/${isbn}`)
       .pipe(
@@ -85,9 +77,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca todos os livros
-   */
+  
   getAllBooks(): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.apiUrl}`)
       .pipe(
@@ -95,9 +85,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca todos os livros com estatísticas de avaliação
-   */
+  
   getAllBooksWithStats(): Observable<BookWithStatsDTO[]> {
     return this.http.get<BookWithStatsDTO[]>(`${this.apiUrl}/with/stats`)
       .pipe(
@@ -105,9 +93,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livros por título (contém)
-   */
+  
   searchByTitle(title: string): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.apiUrl}/title/ignoreCase/${title}`)
       .pipe(
@@ -115,9 +101,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livros por autor (contém)
-   */
+  
   searchByAuthor(author: string): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.apiUrl}/author/ignoreCase/contains/${author}`)
       .pipe(
@@ -125,9 +109,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livros por tema (contém)
-   */
+ 
   searchByTema(tema: string): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.apiUrl}/tema/ignoreCase/contains/${tema}`)
       .pipe(
@@ -135,9 +117,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Atualiza um livro
-   */
+  
   updateBook(id: number, bookData: BookRequestDTO): Observable<BookResponseDTO> {
     return this.http.put<BookResponseDTO>(`${this.apiUrl}/${id}`, bookData)
       .pipe(
@@ -145,9 +125,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Deleta um livro
-   */
+  
   deleteBook(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`)
       .pipe(
@@ -155,9 +133,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Verifica se ISBN já existe
-   */
+  
   checkIsbnExists(isbn: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/exists/isbn/${isbn}`)
       .pipe(
@@ -165,9 +141,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Verifica se título já existe
-   */
+  
   checkTitleExists(title: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/exists/title/${title}`)
       .pipe(
@@ -175,11 +149,7 @@ export class BookService {
       );
   }
 
-  // ============ ENDPOINTS DE ALOCAÇÃO ============
-
-  /**
-   * Aloca um livro para um usuário
-   */
+  
   allocateBook(allocationRequest: BookAllocationRequestDTO): Observable<BookResponseDTO> {
     return this.http.post<BookResponseDTO>(`${this.allocationUrl}/allocate`, allocationRequest)
       .pipe(
@@ -187,9 +157,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Remove a alocação de um livro
-   */
+  
   deallocateBook(bookId: number): Observable<BookResponseDTO> {
     return this.http.delete<BookResponseDTO>(`${this.allocationUrl}/deallocate/${bookId}`)
       .pipe(
@@ -197,9 +165,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livros alocados para um usuário
-   */
+  
   getBooksAllocatedToUser(userId: number): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.allocationUrl}/user/${userId}/allocated`)
       .pipe(
@@ -207,9 +173,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Busca livros disponíveis (não alocados)
-   */
+ 
   getAvailableBooks(): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.allocationUrl}/available`)
       .pipe(
@@ -217,9 +181,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Conta livros alocados para um usuário
-   */
+  
   countBooksAllocatedToUser(userId: number): Observable<number> {
     return this.http.get<number>(`${this.allocationUrl}/user/${userId}/allocation-count`)
       .pipe(
@@ -227,9 +189,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Verifica se um livro está alocado
-   */
+ 
   isBookAllocated(bookId: number): Observable<boolean> {
     return this.http.get<boolean>(`${this.allocationUrl}/${bookId}/is-allocated`)
       .pipe(
@@ -237,9 +197,7 @@ export class BookService {
       );
   }
 
-  /**
-   * Tratamento de erros HTTP
-   */
+ 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Ocorreu um erro desconhecido!';
     

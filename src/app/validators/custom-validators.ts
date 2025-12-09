@@ -1,12 +1,11 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-/**
- * Validador personalizado para CPF brasileiro
- */
+
+
 export function cpfValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
-      return null; // Deixa o required cuidar de valores vazios
+      return null; 
     }
 
     const cpf = control.value.replace(/[^\d]/g, ''); // Remove caracteres não numéricos
@@ -15,7 +14,6 @@ export function cpfValidator(): ValidatorFn {
       return { cpfInvalid: true };
     }
 
-    // Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
     if (/^(\d)\1{10}$/.test(cpf)) {
       return { cpfInvalid: true };
     }
@@ -53,9 +51,7 @@ export function cpfValidator(): ValidatorFn {
   };
 }
 
-/**
- * Validador personalizado para telefone brasileiro
- */
+
 export function phoneValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
@@ -64,7 +60,6 @@ export function phoneValidator(): ValidatorFn {
 
     const phone = control.value.replace(/[^\d]/g, '');
     
-    // Aceita telefone com 10 dígitos (fixo) ou 11 dígitos (celular)
     if (phone.length !== 10 && phone.length !== 11) {
       return { phoneInvalid: true };
     }
@@ -73,9 +68,7 @@ export function phoneValidator(): ValidatorFn {
   };
 }
 
-/**
- * Validador para confirmar se as senhas são iguais
- */
+
 export function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password');
@@ -89,7 +82,6 @@ export function passwordMatchValidator(): ValidatorFn {
       passwordConfirm.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     } else {
-      // Remove o erro se as senhas coincidirem
       const errors = passwordConfirm.errors;
       if (errors) {
         delete errors['passwordMismatch'];
@@ -101,9 +93,7 @@ export function passwordMatchValidator(): ValidatorFn {
   };
 }
 
-/**
- * Máscara para CPF (XXX.XXX.XXX-XX)
- */
+
 export function maskCpf(value: string): string {
   if (!value) return '';
   
@@ -115,10 +105,7 @@ export function maskCpf(value: string): string {
   return value;
 }
 
-/**
- * Máscara para telefone brasileiro
- * (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
- */
+
 export function maskPhone(value: string): string {
   if (!value) return '';
   

@@ -1,89 +1,67 @@
-<div class="control-chart">
-  <h3>Estado de conservação dos livros</h3>
+<div class="container mt-5">
   
-  <!-- Indicador de carregamento -->
-  <div *ngIf="carregandoLivros" class="alert alert-info">
-    <span class="spinner-border spinner-border-sm me-2"></span>
-    Carregando dados dos livros...
-  </div>
-
-  <!-- Mensagem de erro -->
-  <div *ngIf="erroLivros && !carregandoLivros" class="alert alert-danger">
-    {{ erroLivros }}
-    <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarLivros()">
-      Tentar novamente
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Status de Conservação dos Livros</h2>
+    <button class="btn btn-outline-primary btn-sm" (click)="carregarLivros()">
+      <i class="bi bi-arrow-clockwise"></i> Atualizar Lista
     </button>
   </div>
 
-  <!-- Gráfico -->
-  <canvas 
-    #pieCanvas 
-    *ngIf="!carregandoLivros && livros.length > 0"
-    aria-label="Grafico de pizza do estado de conservação" 
-    role="img"
-  ></canvas>
-
-  <!-- Legenda -->
-  <div class="chart-legend" *ngIf="!carregandoLivros && livros.length > 0">
-    <span class="legend-item"><i style="background:#28a745"></i> Bom ({{ conservationData[0] }}%)</span>
-    <span class="legend-item"><i style="background:#ffc107"></i> Regular ({{ conservationData[1] }}%)</span>
-    <span class="legend-item"><i style="background:#dc3545"></i> Ruim ({{ conservationData[2] }}%)</span>
-  </div>
-
-  <!-- Mensagem quando não há livros -->
-  <div *ngIf="!carregandoLivros && livros.length === 0" class="alert alert-warning">
-    Nenhum livro cadastrado no sistema.
-  </div>
-</div>
-
-<!-- Tabela de Status dos Livros -->
-<div class="livrosLocados mt-5">
-  <h2>Status dos Livros</h2>
-
-  <!-- Indicador de carregamento -->
-  <div *ngIf="carregandoLivros" class="alert alert-info">
+  <!-- Feedback de Carregamento -->
+  <div *ngIf="carregandoLivros" class="alert alert-info d-flex align-items-center">
     <span class="spinner-border spinner-border-sm me-2"></span>
     Carregando dados dos livros...
   </div>
 
-  <!-- Tabela -->
-  <table class="table table-striped w-100" *ngIf="!carregandoLivros && livros.length > 0">
-    <thead>
-      <tr>
-        <th scope="col">Ord.</th>
-        <th scope="col">Titulo da Obra</th>
-        <th scope="col">Nome Autor</th>
-        <th scope="col">ISBN</th>
-        <th scope="col">Percentual "Bom"</th>
-        <th scope="col">Percentual "Regular"</th>
-        <th scope="col">Percentual "Ruim"</th>
-        <th scope="col">Total de Avaliações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let livro of livros; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ livro.title }}</td>
-        <td>{{ livro.author }}</td>
-        <td>{{ livro.isbn || 'N/A' }}</td>
-        <td [ngClass]="getPercentualClass(livro.percentualBom)">
-          <strong>{{ livro.percentualBom }}%</strong>
-        </td>
-        <td [ngClass]="getPercentualClass(livro.percentualRegular)">
-          <strong>{{ livro.percentualRegular }}%</strong>
-        </td>
-        <td [ngClass]="getPercentualClass(livro.percentualRuim)">
-          <strong>{{ livro.percentualRuim }}%</strong>
-        </td>
-        <td>
-          <span class="badge bg-primary">{{ livro.totalAvaliacoes }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Mensagem quando não há livros -->
-  <div *ngIf="!carregandoLivros && livros.length === 0" class="alert alert-warning">
-    Nenhum livro cadastrado no sistema.
+  <!-- Feedback de Erro -->
+  <div *ngIf="erroLivros && !carregandoLivros" class="alert alert-danger">
+    {{ erroLivros }}
   </div>
+
+  <!-- Tabela de Estatísticas -->
+  <div *ngIf="!carregandoLivros && livros.length > 0">
+    <table class="table table-striped table-hover w-100 align-middle shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Ord.</th>
+          <th scope="col">Título da Obra</th>
+          <th scope="col">Autor</th>
+          <th scope="col">ISBN</th>
+          <th scope="col" class="text-center">Bom</th>
+          <th scope="col" class="text-center">Regular</th>
+          <th scope="col" class="text-center">Ruim</th>
+          <th scope="col" class="text-center">Total Avaliações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let livro of livros; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ livro.title }}</td>
+          <td>{{ livro.author }}</td>
+          <td><small class="text-muted">{{ livro.isbn || '---' }}</small></td>
+          
+          <!-- Colunas de Percentual com Cores -->
+          <td class="text-center" [ngClass]="getPercentualClass(livro.percentualBom)">
+            <strong>{{ livro.percentualBom }}%</strong>
+          </td>
+          <td class="text-center" [ngClass]="getPercentualClass(livro.percentualRegular)">
+            <strong>{{ livro.percentualRegular }}%</strong>
+          </td>
+          <td class="text-center" [ngClass]="getPercentualClass(livro.percentualRuim)">
+            <strong>{{ livro.percentualRuim }}%</strong>
+          </td>
+          
+          <td class="text-center">
+            <span class="badge bg-secondary rounded-pill">{{ livro.totalAvaliacoes }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Feedback de Lista Vazia -->
+  <div *ngIf="!carregandoLivros && livros.length === 0" class="alert alert-warning">
+    Nenhum livro cadastrado no sistema com estatísticas disponíveis.
+  </div>
+
 </div>

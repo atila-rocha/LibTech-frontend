@@ -50,9 +50,7 @@ export class AuthService {
       return user;
       }
 
-  /**
-   * Faz login no sistema
-   */
+
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
       .pipe(
@@ -63,12 +61,11 @@ export class AuthService {
             localStorage.setItem('token', response.acess_token);
             console.log('✅ Token salvo');
           
-            // IMPORTANTE: Verifique se o response tem ID
             const usuario: Usuario = {
               email: response.email,
               nome: response.nome,
               tipo: response.tipo,
-              id: response.id  // ← Verifique se isso está vindo do backend
+              id: response.id  
             };
             
             console.log('👤 Usuário a ser salvo:', usuario);
@@ -85,9 +82,7 @@ export class AuthService {
       );
   }
 
-  /**
-   * Faz logout do sistema
-   */
+
   logout(): void {
     console.log('🚪 Fazendo logout...');
     localStorage.removeItem('token');
@@ -97,9 +92,7 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  /**
-   * Verifica se usuário está autenticado
-   */
+
   isAuthenticated(): boolean {
     const token = this.getToken();
     const isAuth = !!token && !this.isTokenExpired(token);
@@ -107,16 +100,12 @@ export class AuthService {
     return isAuth;
   }
 
-  /**
-   * Obtém o token JWT armazenado
-   */
+
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  /**
-   * Verifica se o token JWT expirou
-   */
+ 
   private isTokenExpired(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -127,9 +116,7 @@ export class AuthService {
     }
   }
 
-  /**
-   * Verifica se usuário é administrador
-   */
+
   isAdmin(): boolean {
     const user = this.currentUserValue;
     const isAdm = user?.tipo === true;
@@ -137,9 +124,7 @@ export class AuthService {
     return isAdm;
   }
 
-  /**
-   * Verifica se usuário é aluno
-   */
+
   isAluno(): boolean {
     const user = this.currentUserValue;
     const isAl = user?.tipo === false;
@@ -147,9 +132,7 @@ export class AuthService {
     return isAl;
   }
 
-  /**
-   * Tratamento de erros HTTP
-   */
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Ocorreu um erro desconhecido!';
     

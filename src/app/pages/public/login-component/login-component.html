@@ -6,7 +6,6 @@
     <form [formGroup]="loginForm" class="d-flex flex-column  w-50" >
       <h1 class="h2 mb-3 fw-normal"><strong>Acesso ao Sistema da Biblioteca</strong></h1>
       
-      <!-- Mensagem de erro -->
       @if (errorMessage) {
         <div class="alert alert-danger" role="alert">
           {{ errorMessage }}

@@ -10,21 +10,18 @@
     <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="d-flex flex-column  w-50" >
       <h1 class="h3 mb-3 fw-normal"><strong>Cadastre-se</strong></h1>
 
-      <!-- Mensagem de sucesso -->
       @if (successMessage) {
         <div class="alert alert-success" role="alert">
           {{ successMessage }}
         </div>
       }
 
-      <!-- Mensagem de erro -->
       @if (errorMessage) {
         <div class="alert alert-danger" role="alert">
           {{ errorMessage }}
         </div>
       }
 
-      <!-- Informar nome completo -->
       <div class="form-floating mt-3">
         <input
           type="text"
@@ -46,7 +43,6 @@
         }
       </div>
 
-      <!-- Informar CPF -->
       <div class="form-floating mt-3">
         <input
           type="text"
@@ -70,7 +66,6 @@
         }
       </div>
 
-      <!-- Informar e-mail -->
       <div class="form-floating mt-3">
         <input
           type="email"
@@ -92,7 +87,6 @@
         }
       </div>
 
-      <!-- Informar telefone -->
       <div class="form-floating mt-3">
         <input
           type="text"
@@ -116,7 +110,6 @@
         }
       </div>
 
-      <!-- Cadastrar nova senha -->
       <div class="form-floating mt-3">
         <input
           type="password"
@@ -138,7 +131,6 @@
         }
       </div>
 
-      <!-- Confirmar senha -->
       <div class="form-floating mt-3">
         <input
           type="password"
@@ -164,7 +156,6 @@
         }
       </div>
 
-      <!-- Campo Is Admin (Checkbox/Switch) -->
       <div class="form-check form-switch mt-4 mb-3">
         <input
           class="form-check-input"

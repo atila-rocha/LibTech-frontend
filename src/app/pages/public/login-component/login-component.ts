@@ -30,9 +30,7 @@ export class LoginComponent {
     ])
   })
 
-  /**
-   * Login como Aluno
-   */
+ 
   onSubmitAluno() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -42,9 +40,7 @@ export class LoginComponent {
     this.login(false);
   }
 
-  /**
-   * Login como Administrador
-   */
+
   onSubmitAdmin() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -54,9 +50,7 @@ export class LoginComponent {
     this.login(true);
   }
 
-  /**
-   * Método genérico de login
-   */
+ 
   private login(tipoEsperado: boolean) {
     this.errorMessage = '';
     this.isLoading = true;

@@ -33,7 +33,6 @@ export class RecordComponent {
       return;
     }
 
-    // Limpar mensagens anteriores
     this.mensagemSucesso = null;
     this.mensagemErro = null;
     this.enviando = true;
@@ -75,9 +74,7 @@ export class RecordComponent {
     });
   }
 
-  /**
-   * Limpa as mensagens de feedback
-   */
+
   limparMensagens() {
     this.mensagemSucesso = null;
     this.mensagemErro = null;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookService, BookResponseDTO } from '../../../services/book.service';
-import { AuthService } from '../../../services/auth.service'; // IMPORTANTE: Importe o AuthService
+import { AuthService } from '../../../services/auth.service';
 
 declare var bootstrap: any;
 
@@ -17,11 +17,11 @@ export class LivrosComponent implements OnInit {
   livros: BookResponseDTO[] = [];
   livroSelecionado: BookResponseDTO | null = null;
   carregando = false;
-  processandoReserva = false; // Para desabilitar o botão durante a requisição
+  processandoReserva = false; 
 
   constructor(
     private bookService: BookService,
-    private authService: AuthService // Injeção do AuthService
+    private authService: AuthService 
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,6 @@ export class LivrosComponent implements OnInit {
   }
 
   confirmarReserva() {
-    // 1. Validações iniciais
     if (!this.livroSelecionado) return;
 
     const usuarioLogado = this.authService.currentUserValue;
@@ -61,7 +60,6 @@ export class LivrosComponent implements OnInit {
       return;
     }
 
-    // 2. Prepara o objeto da requisição
     const requestDTO = {
       bookId: this.livroSelecionado.id,
       userId: usuarioLogado.id
@@ -69,13 +67,11 @@ export class LivrosComponent implements OnInit {
 
     this.processandoReserva = true;
 
-    // 3. Chama o Backend
     this.bookService.allocateBook(requestDTO).subscribe({
       next: (sucesso) => {
         console.log('Reserva realizada:', sucesso);
         alert(`Livro "${this.livroSelecionado?.title}" reservado com sucesso!`);
         
-        // 4. Atualiza a lista (o livro reservado deve sumir da lista de disponíveis)
         this.listarLivrosDisponiveis();
         this.processandoReserva = false;
       },

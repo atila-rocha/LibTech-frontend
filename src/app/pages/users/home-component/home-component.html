@@ -1,164 +1,149 @@
-<div class="mt-5">
-  <div class="row">
-    <div class="col-6">
-      <h3>Dados do usuário</h3>
+<div class="container mt-5">
+  
 
-      <!-- Indicador de carregamento -->
-      <div *ngIf="carregandoUsuario" class="alert alert-info">
-        <span class="spinner-border spinner-border-sm me-2"></span>
-        Carregando dados do usuário...
+  <div class="row mb-5">
+    <div class="col-md-8">
+      <h3 class="mb-3 border-bottom pb-2">Meus Dados</h3>
+
+      <div *ngIf="carregandoUsuario" class="alert alert-light text-center">
+        <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+        Carregando perfil...
       </div>
 
-      <!-- Mensagem de erro -->
-      <div *ngIf="erroUsuario && !carregandoUsuario" class="alert alert-danger">
+      <div *ngIf="erroUsuario" class="alert alert-danger">
         {{ erroUsuario }}
-        <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarDadosUsuario()">
-          Tentar novamente
-        </button>
       </div>
 
-      <!-- Tabela com dados do usuário -->
-      <table class="table table-hover mt-3" *ngIf="usuarioLogado && !carregandoUsuario">
-        <tbody>
-          <tr>
-            <td><strong>Nome</strong></td>
-            <td>{{ usuarioLogado.name }}</td>
-            <td>
-              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
-                Editar
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>E-mail</strong></td>
-            <td>{{ usuarioLogado.email }}</td>
-            <td>
-              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
-                Editar
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>CPF</strong></td>
-            <td>{{ usuarioLogado.cpf }}</td>
-            <td>
-              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
-                Editar
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td><strong>Telefone</strong></td>
-            <td>{{ usuarioLogado.phone }}</td>
-            <td>
-              <button type="button" class="btn btn-secondary w-75" (click)="showEditModal()">
-                Editar
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Modal de edição -->
-      <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Dados</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              Deseja dar seguimento na edição dos dados?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-              <button type="button" class="btn btn-danger">Sim</button>
-            </div>
-          </div>
+      <div class="card shadow-sm" *ngIf="usuarioLogado && !carregandoUsuario">
+        <div class="card-body p-0">
+          <table class="table table-hover mb-0">
+            <tbody>
+              <tr>
+                <td class="fw-bold bg-light w-25 ps-4">Nome</td>
+                <td>{{ usuarioLogado.name }}</td>
+                <td class="text-end pe-4">
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light ps-4">E-mail</td>
+                <td>{{ usuarioLogado.email }}</td>
+                <td class="text-end pe-4">
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light ps-4">CPF</td>
+                <td>{{ usuarioLogado.cpf }}</td>
+                <td class="text-end pe-4">
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light ps-4">Telefone</td>
+                <td>{{ usuarioLogado.phone }}</td>
+                <td class="text-end pe-4">
+                  
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Seção de Livros Locados -->
-  <div class="livrosLocados mt-5">
-  <h2 class="mb-4">Meus Livros Locados</h2>
 
-  <!-- 1. Feedback de Carregamento -->
-  <div *ngIf="carregandoLivros" class="text-center my-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Carregando...</span>
+  <div class="livrosLocados">
+    <h3 class="mb-3 border-bottom pb-2">Meus Livros Locados</h3>
+
+    <div *ngIf="carregandoLivros" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="text-muted mt-2">Buscando seus livros...</p>
     </div>
-    <p class="mt-2 text-muted">Carregando seus livros...</p>
+
+    <div *ngIf="!carregandoLivros && livrosAlocados.length === 0" class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>
+      Você não possui livros locados no momento.
+    </div>
+
+    <div class="table shadow-sm rounded" *ngIf="!carregandoLivros && livrosAlocados.length > 0">
+      <table class="table table-striped table-hover align-middle mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="ps-3">#</th>
+            <th scope="col">Título</th>
+            <th scope="col">Autor</th>
+            <th scope="col">ISBN</th>
+            <th scope="col" class="text-center">Avaliação</th>
+            <th scope="col" class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let livro of livrosAlocados; let i = index">
+            <th scope="row" class="ps-3">{{ i + 1 }}</th>
+            <td class="fw-semibold">{{ livro.title }}</td>
+            <td>{{ livro.author }}</td>
+            <td><small class="text-muted">{{ livro.isbn || '-' }}</small></td>
+            
+            <td class="text-center">
+              <div class="btn-group">
+                <button type="button" [ngClass]="stateClass(bookStates[i])" class="btn-sm fw-bold">
+                  {{ stateLabel(bookStates[i]) }}
+                </button>
+                
+                <button type="button" 
+                        class="btn btn-sm dropdown-toggle dropdown-toggle-split" 
+                        [ngClass]="stateClass(bookStates[i])"
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false">
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                
+                <ul class="dropdown-menu">
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" (click)="avaliarLivro(i, livro, 'bom')">
+                      <span class="badge bg-success me-2">Bom</span> O livro está ótimo
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" (click)="avaliarLivro(i, livro, 'regular')">
+                      <span class="badge bg-warning text-dark me-2">Regular</span> Marcas de uso
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" (click)="avaliarLivro(i, livro, 'ruim')">
+                      <span class="badge bg-danger me-2">Ruim</span> Danificado/Rasgado
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+
+            <td class="text-center">
+              <button class="btn btn-outline-danger btn-sm" (click)="desalocarLivro(livro.id)">
+                Devolver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- 2. Feedback de Lista Vazia -->
-  <div *ngIf="!carregandoLivros && livrosAlocados.length === 0" class="alert alert-info" role="alert">
-    Você não possui livros locados no momento. 
-    <br>
-    <small>Vá até a aba de "Livros" para realizar uma nova locação.</small>
+  <div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Editar Dados</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Funcionalidade de edição em desenvolvimento...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary">Salvar</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- 3. Tabela Dinâmica -->
-  <table class="table table-striped table-hover align-middle" *ngIf="!carregandoLivros && livrosAlocados.length > 0">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">Ord.</th>
-        <th scope="col">Título da Obra</th>
-        <th scope="col">Autor</th>
-        <th scope="col">ISBN</th>
-        <th scope="col">Ano Pub.</th>
-        <th scope="col" class="text-center">Estado de Conservação</th>
-        <th scope="col" class="text-center">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Loop Principal -->
-      <tr *ngFor="let livro of livrosAlocados; let i = index">
-        <th scope="row">{{ i + 1 }}</th>
-        <td>{{ livro.title }}</td>
-        <td>{{ livro.author }}</td>
-        <td>{{ livro.isbn || 'N/A' }}</td>
-        <td>{{ livro.publishedYear }}</td>
-        
-        <!-- Coluna do Dropdown de Estado -->
-        <td class="text-center">
-          <div class="btn-group">
-            <!-- Botão principal que mostra o estado atual -->
-            <button type="button" [ngClass]="stateClass(bookStates[i])" class="btn-sm">
-              {{ stateLabel(bookStates[i]) }}
-            </button>
-            
-            <!-- Toggle do Dropdown -->
-            <button type="button" 
-                    class="btn btn-sm dropdown-toggle dropdown-toggle-split" 
-                    [ngClass]="stateClass(bookStates[i])"
-                    data-bs-toggle="dropdown" 
-                    aria-expanded="false">
-              <span class="visually-hidden">Toggle Dropdown</span>
-            </button>
-            
-            <!-- Opções do Menu -->
-            <ul class="dropdown-menu">
-              <li><button class="dropdown-item" type="button" (click)="setState(i, 'bom')">Bom</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(i, 'regular')">Regular</button></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(i, 'ruim')">Ruim</button></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><button class="dropdown-item" type="button" (click)="setState(i, 'perda')">Perda/Dano</button></li>
-            </ul>
-          </div>
-        </td>
-
-        <!-- Coluna de Ações (Devolução) -->
-        <td class="text-center">
-          <button 
-            class="btn btn-outline-danger btn-sm" 
-            title="Devolver Livro"
-            (click)="desalocarLivro(livro.id)">
-            <i class="bi bi-arrow-return-left"></i> Devolver
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

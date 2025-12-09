@@ -38,9 +38,6 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Registra um novo usuário no sistema
-   */
   register(userData: UserRegisterRequest): Observable<UserRegisterResponse> {
     return this.http.post<UserRegisterResponse>(`${this.apiUrl}`, userData)
       .pipe(
@@ -48,9 +45,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Busca usuário por ID
-   */
+  
   getUserById(id: number): Observable<UserResponseDTO> {
     return this.http.get<UserResponseDTO>(`${this.apiUrl}/${id}`)
       .pipe(
@@ -58,9 +53,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Busca usuário por email
-   */
+  
   getUserByEmail(email: string): Observable<UserResponseDTO> {
     return this.http.get<UserResponseDTO>(`${this.apiUrl}/email/${email}`)
       .pipe(
@@ -68,9 +61,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Busca usuário por CPF
-   */
+  
   getUserByCpf(cpf: string): Observable<UserResponseDTO> {
     return this.http.get<UserResponseDTO>(`${this.apiUrl}/cpf/${cpf}`)
       .pipe(
@@ -78,9 +69,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Atualiza dados do usuário
-   */
+ 
   updateUser(id: number, userData: UserRegisterRequest): Observable<UserResponseDTO> {
     return this.http.put<UserResponseDTO>(`${this.apiUrl}/${id}`, userData)
       .pipe(
@@ -88,9 +77,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Verifica se um email já está cadastrado
-   */
+  
   checkEmailExists(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/exists/email/${email}`)
       .pipe(
@@ -98,9 +85,6 @@ export class UserService {
       );
   }
 
-  /**
-   * Verifica se um CPF já está cadastrado
-   */
   checkCpfExists(cpf: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/exists/cpf/${cpf}`)
       .pipe(
@@ -108,9 +92,7 @@ export class UserService {
       );
   }
 
-  /**
-   * Tratamento de erros HTTP
-   */
+  
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Ocorreu um erro desconhecido!';
     
