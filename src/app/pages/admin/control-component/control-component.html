@@ -1,64 +1,89 @@
 <div class="control-chart">
   <h3>Estado de conservação dos livros</h3>
-  <canvas #pieCanvas aria-label="Grafico de pizza do estado de conservação" role="img"></canvas>
-  <div class="chart-legend">
-    <span class="legend-item"><i style="background:#28a745"></i> Bom</span>
-    <span class="legend-item"><i style="background:#ffc107"></i> Regular</span>
-    <span class="legend-item"><i style="background:#dc3545"></i> Ruim</span>
+  
+  <!-- Indicador de carregamento -->
+  <div *ngIf="carregandoLivros" class="alert alert-info">
+    <span class="spinner-border spinner-border-sm me-2"></span>
+    Carregando dados dos livros...
+  </div>
+
+  <!-- Mensagem de erro -->
+  <div *ngIf="erroLivros && !carregandoLivros" class="alert alert-danger">
+    {{ erroLivros }}
+    <button class="btn btn-sm btn-outline-danger ms-2" (click)="carregarLivros()">
+      Tentar novamente
+    </button>
+  </div>
+
+  <!-- Gráfico -->
+  <canvas 
+    #pieCanvas 
+    *ngIf="!carregandoLivros && livros.length > 0"
+    aria-label="Grafico de pizza do estado de conservação" 
+    role="img"
+  ></canvas>
+
+  <!-- Legenda -->
+  <div class="chart-legend" *ngIf="!carregandoLivros && livros.length > 0">
+    <span class="legend-item"><i style="background:#28a745"></i> Bom ({{ conservationData[0] }}%)</span>
+    <span class="legend-item"><i style="background:#ffc107"></i> Regular ({{ conservationData[1] }}%)</span>
+    <span class="legend-item"><i style="background:#dc3545"></i> Ruim ({{ conservationData[2] }}%)</span>
+  </div>
+
+  <!-- Mensagem quando não há livros -->
+  <div *ngIf="!carregandoLivros && livros.length === 0" class="alert alert-warning">
+    Nenhum livro cadastrado no sistema.
   </div>
 </div>
 
+<!-- Tabela de Status dos Livros -->
+<div class="livrosLocados mt-5">
+  <h2>Status dos Livros</h2>
 
-<div class = "livrosLocados mt-5">
+  <!-- Indicador de carregamento -->
+  <div *ngIf="carregandoLivros" class="alert alert-info">
+    <span class="spinner-border spinner-border-sm me-2"></span>
+    Carregando dados dos livros...
+  </div>
 
-    <h2>Status dos Livros</h2>
+  <!-- Tabela -->
+  <table class="table table-striped w-100" *ngIf="!carregandoLivros && livros.length > 0">
+    <thead>
+      <tr>
+        <th scope="col">Ord.</th>
+        <th scope="col">Titulo da Obra</th>
+        <th scope="col">Nome Autor</th>
+        <th scope="col">ISBN</th>
+        <th scope="col">Percentual "Bom"</th>
+        <th scope="col">Percentual "Regular"</th>
+        <th scope="col">Percentual "Ruim"</th>
+        <th scope="col">Total de Avaliações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let livro of livros; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ livro.title }}</td>
+        <td>{{ livro.author }}</td>
+        <td>{{ livro.isbn || 'N/A' }}</td>
+        <td [ngClass]="getPercentualClass(livro.percentualBom)">
+          <strong>{{ livro.percentualBom }}%</strong>
+        </td>
+        <td [ngClass]="getPercentualClass(livro.percentualRegular)">
+          <strong>{{ livro.percentualRegular }}%</strong>
+        </td>
+        <td [ngClass]="getPercentualClass(livro.percentualRuim)">
+          <strong>{{ livro.percentualRuim }}%</strong>
+        </td>
+        <td>
+          <span class="badge bg-primary">{{ livro.totalAvaliacoes }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <table class="table table-striped w-100">
-  <thead>
-    <tr>
-      <th scope="col">Ord.</th>
-      <th scope="col">Titulo da Obra</th>
-      <th scope="col">Nome Autor</th>
-      <th scope="col">ISBN</th>
-      <th scope="col">Percentual "Bom"</th>
-      <th scope="col">Percentual "Regular"</th>
-      <th scope="col">Percentual "Ruim"</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Algoritmos de Computadores</td>
-      <td>Victor Vale</td>
-      <td>1223123152</td>
-      <td>20%</td>
-      <td>50%</td>
-      <td>20%</td>
-        
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Lógica de Programação</td>
-      <td>Bruno Lopes</td>
-      <td>3434323312</td>
-      <td>20%</td>
-      <td>50%</td>
-      <td>20%</td>
-        
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Programação orientada a objetos.</td>
-      <td>Elon Musk da Silva</td>
-      <td>4545454433</td>
-      <td>20%</td>
-      <td>50%</td>
-      <td>20%</td>
-       
-    </tr>
-    
-  </tbody>
-</table>
-
- 
+  <!-- Mensagem quando não há livros -->
+  <div *ngIf="!carregandoLivros && livros.length === 0" class="alert alert-warning">
+    Nenhum livro cadastrado no sistema.
+  </div>
 </div>

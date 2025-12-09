@@ -1,59 +1,81 @@
-<div class = "livrosLocados mt-5">
+<div class="livrosLocados mt-5">
 
-    <h2>Livros disponíveis para locação</h2>
+  <h2 class="mb-4">Livros disponíveis para locação</h2>
 
-    <table class="table table-striped w-100">
-  <thead>
-    <tr>
-      <th scope="col">Ord.</th>
-      <th scope="col">Titulo da Obra</th>
-      <th scope="col">Nome Autor</th>
-      <th scope="col">ISBN</th>
-      <th scope="col">Reserva de Livro</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Algoritmos de Computadores</td>
-      <td>Victor Vale</td>
-      <td>1223123152</td>
-      
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Lógica de Programação</td>
-      <td>Bruno Lopes</td>
-      <td>3434323312</td>
-       
-        <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Programação orientada a objetos.</td>
-      <td>Elon Musk da Silva</td>
-      <td>4545454433</td>
-     
-       <td><button type="button" class="btn btn-secondary w-75" (click)="showReservModal()">Reservar</button></td>
-    </tr>
-    
-  </tbody>
-</table>
+  <!-- 1. Feedback de Carregamento -->
+  <div *ngIf="carregando" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Buscando livros disponíveis...</p>
+  </div>
 
- <div class="modal fade" id="livroReservModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <!-- 2. Feedback de Lista Vazia -->
+  <div *ngIf="!carregando && livros.length === 0" class="alert alert-warning mt-3" role="alert">
+    Nenhum livro disponível para locação no momento.
+  </div>
+
+  <!-- 3. Tabela de Livros -->
+  <table class="table table-striped table-hover w-100" *ngIf="!carregando && livros.length > 0">
+    <thead class="table-light">
+      <tr>
+        <th scope="col">Ord.</th>
+        <th scope="col">Titulo da Obra</th>
+        <th scope="col">Nome Autor</th>
+        <th scope="col">ISBN</th>
+        <th scope="col" class="text-center">Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let livro of livros; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ livro.title }}</td>
+        <td>{{ livro.author }}</td>
+        <td>{{ livro.isbn || 'N/A' }}</td>
+        <td class="text-center">
+          <!-- Botão que abre o modal e passa o livro atual -->
+          <button 
+            type="button" 
+            class="btn btn-secondary w-75" 
+            (click)="showReservModal(livro)">
+            Reservar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. Modal de Confirmação -->
+  <div class="modal fade" id="livroReservModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Reservar Livro</h1>
+          <h1 class="modal-title fs-5" id="modalLabel">Confirmar Reserva</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        
         <div class="modal-body">
-          Deseja dar seguimento na locação do livro?
+          <p>Você deseja confirmar a locação do seguinte livro?</p>
+          
+          <!-- Exibe detalhes do livro selecionado -->
+          <div *ngIf="livroSelecionado" class="alert alert-light border text-center">
+            <h5 class="mb-1 text-primary fw-bold">{{ livroSelecionado.title }}</h5>
+            <small class="text-muted">{{ livroSelecionado.author }}</small>
+          </div>
         </div>
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-          <button type="button" class="btn btn-danger">Sim</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          
+          <!-- Botão Sim: Chama a função e fecha o modal -->
+          <button 
+            type="button" 
+            class="btn btn-danger" 
+            (click)="confirmarReserva()" 
+            data-bs-dismiss="modal"
+            [disabled]="processandoReserva">
+            Sim, Reservar
+          </button>
         </div>
       </div>
     </div>

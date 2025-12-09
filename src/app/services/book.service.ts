@@ -19,11 +19,29 @@ export interface BookResponseDTO {
   publishedYear: number;
 }
 
+export interface BookWithStatsDTO {
+  id: number;
+  title: string;
+  author: string;
+  isbn?: string;
+  publishedYear: number;
+  totalAvaliacoes: number;
+  percentualBom: number;
+  percentualRegular: number;
+  percentualRuim: number;
+}
+
+export interface BookAllocationRequestDTO {
+  bookId: number;
+  userId: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
   private apiUrl = 'http://localhost:8080/books';
+  private allocationUrl = 'http://localhost:8080/allocation';
 
   constructor(private http: HttpClient) {}
 
@@ -72,6 +90,16 @@ export class BookService {
    */
   getAllBooks(): Observable<BookResponseDTO[]> {
     return this.http.get<BookResponseDTO[]>(`${this.apiUrl}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Busca todos os livros com estatísticas de avaliação
+   */
+  getAllBooksWithStats(): Observable<BookWithStatsDTO[]> {
+    return this.http.get<BookWithStatsDTO[]>(`${this.apiUrl}/with/stats`)
       .pipe(
         catchError(this.handleError)
       );
@@ -144,6 +172,68 @@ export class BookService {
     return this.http.get<boolean>(`${this.apiUrl}/exists/title/${title}`)
       .pipe(
         catchError(() => throwError(() => new Error('Erro ao verificar título')))
+      );
+  }
+
+  // ============ ENDPOINTS DE ALOCAÇÃO ============
+
+  /**
+   * Aloca um livro para um usuário
+   */
+  allocateBook(allocationRequest: BookAllocationRequestDTO): Observable<BookResponseDTO> {
+    return this.http.post<BookResponseDTO>(`${this.allocationUrl}/allocate`, allocationRequest)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Remove a alocação de um livro
+   */
+  deallocateBook(bookId: number): Observable<BookResponseDTO> {
+    return this.http.delete<BookResponseDTO>(`${this.allocationUrl}/deallocate/${bookId}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Busca livros alocados para um usuário
+   */
+  getBooksAllocatedToUser(userId: number): Observable<BookResponseDTO[]> {
+    return this.http.get<BookResponseDTO[]>(`${this.allocationUrl}/user/${userId}/allocated`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Busca livros disponíveis (não alocados)
+   */
+  getAvailableBooks(): Observable<BookResponseDTO[]> {
+    return this.http.get<BookResponseDTO[]>(`${this.allocationUrl}/available`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Conta livros alocados para um usuário
+   */
+  countBooksAllocatedToUser(userId: number): Observable<number> {
+    return this.http.get<number>(`${this.allocationUrl}/user/${userId}/allocation-count`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Verifica se um livro está alocado
+   */
+  isBookAllocated(bookId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.allocationUrl}/${bookId}/is-allocated`)
+      .pipe(
+        catchError(this.handleError)
       );
   }
 
